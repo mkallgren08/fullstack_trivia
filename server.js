@@ -26,9 +26,7 @@ app.use(routes);
 // Set up promises with mongoose
 mongoose.Promise = global.Promise;
 
-// "mongodb://heroku_cwf2cqkx:8vpi8pekalrvhlae96mahc4ktq@ds153494.mlab.com:53494/heroku_cwf2cqkx"
-// process.env.MONGODB_URI ||
-const mongoConnect =  'mongodb://localhost/nyt-react-app'
+const mongoConnect =  process.env.MONGODB_URI.replace('<password>',process.env.MONGODB_COLLECTION_PASSWORD)
 // Connect to the Mongo DB
 mongoose.connect(
   mongoConnect , {
@@ -45,7 +43,7 @@ db.on("error", function (error) {
 
 // Once logged in to the db through mongoose, log a success message
 db.once("open", function () {
-  console.log(`Mongoose connection to ${mongoConnect} successful.`);
+  console.log(`Mongoose connection to remote database successful.`);
 });
 
 // Send every request to the React app
@@ -56,4 +54,9 @@ db.once("open", function () {
 
 app.listen(PORT, function() {
   console.log(`🌎 ==> Server now on port ${PORT}!`);
+  process.env.TEST_VAR ? console.log(`
+  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  ${process.env.TEST_VAR}
+  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  `): null;
 });
